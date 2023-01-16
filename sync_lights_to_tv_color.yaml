@@ -4,43 +4,50 @@
 # entity id's accordingly - sensor.[CHANGE]_blue_channel   #
 ############################################################
 - id: color_sensor_led_set
-  alias: Color Sensor
-  description: 'Set the color of RGBW LED Strips, or any rgb light intergrated with HA, sends value in 255 format-  -to use % instead remove / 100 * 255'
-  trigger:
+description: ""
+trigger:
   - platform: state
     entity_id:
-    - sensor.color_sensor_blue_channel
-    - sensor.color_sensor_red_channel
-    - sensor.color_sensor_green_channel
-    - sensor.color_sensor_clear_channel
-    - sensor.color_sensor_illuminance
-    - sensor.color_sensor_color_temperature
-  condition: []
-  action:
+      - sensor.color_sensor_blue_channel
+      - sensor.color_sensor_red_channel
+      - sensor.color_sensor_green_channel
+      - sensor.color_sensor_clear_channel
+      - sensor.color_sensor_illuminance
+      - sensor.color_sensor_color_temperature
+condition: []
+action:
   - service: light.turn_on
     data_template:
       rgbw_color:
-      - '{{states("sensor.color_sensor_red_channel") | int / 100 * 255 }}'
-      - '{{states("sensor.color_sensor_green_channel") | int / 100 * 255 }}'
-      - '{{states("sensor.color_sensor_blue_channel") | int / 100 * 255 }}'
-      - '{{states("sensor.color_sensor_clear_channel") | int / 100 * 255 }}'
+        - "{{states(\"sensor.color_sensor_green_channel\") | int / 100 * 255 }}"
+        - "{{states(\"sensor.color_sensor_red_channel\") | int / 100 * 255 }}"
+        - "{{states(\"sensor.color_sensor_blue_channel\") | int / 100 * 255 }}"
+        - "{{states(\"sensor.color_sensor_clear_channel\") | int / 100 * 255 }}"
     target:
       entity_id:
-      - light.neopixel
-      - light.wled_5
-      - light.tv_side_light
-      - light.plant_room_neopixel
-# RGBW Lights go here
+        - light.neopixel
+        - light.plant_room_neopixel
     enabled: true
   - service: light.turn_on
     data_template:
       rgb_color:
-      - '{{states("sensor.color_sensor_red_channel") | int / 100 * 255 }}'
-      - '{{states("sensor.color_sensor_green_channel") | int / 100 * 255 }}'
-      - '{{states("sensor.color_sensor_blue_channel") | int / 100 * 255 }}'
+        - "{{states(\"sensor.color_sensor_red_channel\") | int / 100 * 255 }}"
+        - "{{states(\"sensor.color_sensor_green_channel\") | int / 100 * 255 }}"
+        - "{{states(\"sensor.color_sensor_blue_channel\") | int / 100 * 255 }}"
     target:
       entity_id:
-      - light.bulb_1
-#    add rgb lights here, like the generic wifi light bulbs 
+        - light.bulb_1
     enabled: true
-  mode: single
+  - service: light.turn_on
+    data_template:
+      rgbw_color:
+        - "{{states(\"sensor.color_sensor_red_channel\") | int / 100 * 255 }}"
+        - "{{states(\"sensor.color_sensor_green_channel\") | int / 100 * 255 }}"
+        - "{{states(\"sensor.color_sensor_blue_channel\") | int / 100 * 255 }}"
+        - "{{states(\"sensor.color_sensor_clear_channel\") | int / 100 * 255 }}"
+    target:
+      entity_id:
+        - light.wled_5
+        - light.tv_side_light
+    enabled: true
+mode: single
