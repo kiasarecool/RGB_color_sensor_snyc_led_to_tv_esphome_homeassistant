@@ -1,0 +1,61 @@
+##############################
+#   This goes at the top     #
+#  In espHome device config  #
+##############################
+substitutions:
+  esp_name: "Color Sensor"
+  sda_pin: "16"
+  scl_pin: "17"
+  sensor_pin: "18"
+  
+  
+
+######################################################
+#    Paste below this box under 'captive_portal:  '  #
+######################################################
+i2c: 
+  sda: ${sda_pin}
+  scl: ${scl_pin}
+
+switch:
+  - platform: gpio
+    pin: ${sensor_pin}
+    name: "Color Sensor LED"
+    id: sensor_led
+sensor:
+  - platform: tcs34725
+    
+    red_channel:
+      name: "${esp_name} Red Channel"
+      id: red1
+    green_channel:
+      name: "${esp_name} Green Channel"
+      id: green1
+    blue_channel:
+      name: "${esp_name} Blue Channel"
+      id: blue1
+#trying to move the action from HA automation to here, no luck so far.
+#      on_value:
+#        then:
+#          - homeassistant.service: 
+#              service: light.turn_on
+#              data_template:
+#                rgbw_color: "[((id(red1).state | int) * 255 / 100), ((id(green1).state | int) * 255 / 100), ((id(blue1).state | int) * 255 / 100), ((id(clear1).state | int) * 255 / 100)]"
+#                entity_id: light.wled_5
+ 
+
+    clear_channel:
+      name: "${esp_name} Clear Channel"
+      id: clear1
+    illuminance:
+      name: "${esp_name} Illuminance"
+      id: lumen
+    color_temperature:
+      name: "${esp_name} Color Temperature"
+      id: temp
+    glass_attenuation_factor: 2.5
+    address: 0x29
+    update_interval: 0.5s
+    integration_time: auto
+#    gain: 1X
+  
